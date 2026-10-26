@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="es" class="h-full bg-black">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>???</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Google: Creepster & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: 'Cinzel', serif;
+            background-color: #000000;
+            overflow: hidden;
+            user-select: none;
+        }
+
+        /* Ambient glowing eyes container */
+        .eyes-container {
+            position: absolute;
+            top: 40%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            gap: 120px;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(8px);
+            opacity: 0.65;
+            transition: opacity 1s ease, filter 0.8s ease;
+        }
+
+        /* Eye design with radial gradients & blur */
+        .eye {
+            width: 140px;
+            height: 60px;
+            background: radial-gradient(ellipse at center, rgba(220, 38, 38, 0.85) 0%, rgba(153, 27, 27, 0.4) 45%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 50px rgba(220, 38, 38, 0.4), inset 0 0 20px rgba(185, 28, 28, 0.6);
+            animation: slowBlink 7s infinite ease-in-out;
+        }
+
+        /* Inner Pupil */
+        .pupil {
+            width: 22px;
+            height: 45px;
+            background: #000;
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: 0 0 15px rgba(255, 0, 0, 0.9), inset 0 0 8px rgba(0, 0, 0, 0.9);
+            transition: transform 0.15s ease-out;
+        }
+
+        /* Eye blink animation */
+        @keyframes slowBlink {
+            0%, 90%, 100% {
+                transform: scaleY(1);
+            }
+            95% {
+                transform: scaleY(0.05);
+            }
+        }
+
+        /* Glowing center orb / bubble */
+        .interactive-bubble {
+            background: rgba(10, 10, 10, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.9), 
+                        0 0 15px rgba(255, 255, 255, 0.05),
+                        inset 0 0 20px rgba(255, 255, 255, 0.02);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .interactive-bubble:hover, .interactive-bubble:focus-within {
+            border-color: rgba(220, 38, 38, 0.4);
+            box-shadow: 0 0 45px rgba(220, 38, 38, 0.25), 
+                        inset 0 0 25px rgba(220, 38, 38, 0.08);
+        }
+
+        /* Error shake effect */
+        @keyframes errorShake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-12px); }
+            40%, 80% { transform: translateX(12px); }
+        }
+
+        .shake {
+            animation: errorShake 0.5s ease-in-out;
+            border-color: rgba(239, 68, 68, 0.8) !important;
+            box-shadow: 0 0 40px rgba(239, 68, 68, 0.5) !important;
+        }
+
+        /* Pulse glow animation for input button */
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.05); }
+        }
+
+        .ambient-glow {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+    </style>
+</head>
+<body class="h-full flex items-center justify-center relative overflow-hidden select-none">
+
+    <!-- Atmospheric Vignette & Noise overlay -->
+    <div class="fixed inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_20%,rgba(0,0,0,0.95)_100%)] z-10"></div>
+
+    <!-- Background Gaze (Glowy Blur Eyes) -->
+    <div class="eyes-container" id="eyesContainer">
+        <!-- Left Eye -->
+        <div class="eye">
+            <div class="pupil" id="pupilLeft"></div>
+        </div>
+        <!-- Right Eye -->
+        <div class="eye">
+            <div class="pupil" id="pupilRight"></div>
+        </div>
+    </div>
+
+    <!-- Whispering Atmosphere Text (Minimalist) -->
+    <div id="statusText" class="absolute top-1/4 text-center text-xs tracking-[0.4em] uppercase text-zinc-600 transition-all duration-700 opacity-60 z-20 font-sans">
+        Ingresa la clave
+    </div>
+
+    <!-- Main Secret Input Bubble Container -->
+    <main class="relative z-20 w-full max-w-md px-6">
+        <form id="secretForm" onsubmit="handleSecret(event)" class="relative">
+            <!-- Pulsing back-glow for the bubble -->
+            <div class="ambient-glow absolute -inset-1 bg-gradient-to-r from-red-900/30 via-zinc-800/20 to-red-900/30 rounded-full blur-xl pointer-events-none"></div>
+
+            <div id="bubbleCard" class="interactive-bubble relative rounded-full p-2.5 flex items-center justify-between transition-all duration-500">
+                <input 
+                    type="password" 
+                    id="secretInput" 
+                    placeholder="• • • • • • • •" 
+                    autocomplete="off"
+                    spellcheck="false"
+                    class="w-full bg-transparent px-6 py-3 text-center text-zinc-200 placeholder-zinc-700 focus:outline-none tracking-[0.3em] text-sm md:text-base transition-colors"
+                >
+                <button 
+                    type="submit" 
+                    aria-label="Revelar"
+                    class="group relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900/80 hover:bg-red-950/60 border border-zinc-800 hover:border-red-900/50 text-zinc-400 hover:text-red-400 transition-all duration-300 flex-shrink-0"
+                >
+                    <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"></path>
+                    </svg>
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <!-- Subtitle / Hint -->
+    <div id="errorMessage" class="absolute bottom-16 text-center text-xs tracking-widest text-red-900 opacity-0 transition-opacity duration-500 font-sans z-20">
+        NADA SUCEDE... ALGUIEN MIRA.
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Links de redirección
+        const REDIRECTS = {
+            "LGHEJFGHGHFVIVA": "https://photos.app.goo.gl/hyoGdX7k25SiWytn8",
+            "NOSOBSERVA": "https://photos.goo.gl/QwWp7Wp2cPnMxnQh8"
+        };
+
+        const form = document.getElementById('secretForm');
+        const input = document.getElementById('secretInput');
+        const bubbleCard = document.getElementById('bubbleCard');
+        const statusText = document.getElementById('statusText');
+        const errorMessage = document.getElementById('errorMessage');
+        const eyesContainer = document.getElementById('eyesContainer');
+
+        const pupilLeft = document.getElementById('pupilLeft');
+        const pupilRight = document.getElementById('pupilRight');
+
+        // Pupilar Follow Effect (Ojos que siguen el cursor)
+        document.addEventListener('mousemove', (e) => {
+            const { clientX, clientY } = e;
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+
+            // Calcular desplazamiento de pupilas (máximo ~18px)
+            const moveX = ((clientX / windowWidth) - 0.5) * 36;
+            const moveY = ((clientY / windowHeight) - 0.5) * 20;
+
+            pupilLeft.style.transform = `translate(${moveX}px, ${moveY}px)`;
+            pupilRight.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        });
+
+        // Manejo del formulario
+        function handleSecret(e) {
+            e.preventDefault();
+            const rawValue = input.value.trim();
+            const value = rawValue.toUpperCase();
+
+            if (REDIRECTS[value]) {
+                // Éxito: Animación de transición atmosférica
+                statusText.innerText = "ACCESO CONCEDIDO";
+                statusText.classList.remove('text-zinc-600');
+                statusText.classList.add('text-red-600', 'tracking-[0.6em]');
+
+                // Los ojos se enfocan y brillan intensamente
+                eyesContainer.style.filter = "blur(0px)";
+                eyesContainer.style.opacity = "1";
+
+                bubbleCard.style.borderColor = "rgba(220, 38, 38, 0.9)";
+                bubbleCard.style.boxShadow = "0 0 60px rgba(220, 38, 38, 0.8)";
+
+                setTimeout(() => {
+                    window.location.href = REDIRECTS[value];
+                }, 800);
+
+            } else {
+                // Error: Sacudida y mensaje tenebroso
+                bubbleCard.classList.add('shake');
+                errorMessage.classList.remove('opacity-0');
+                errorMessage.classList.add('opacity-100');
+
+                // Los ojos parpadean intensamente en el fallo
+                eyesContainer.style.filter = "blur(12px)";
+                eyesContainer.style.opacity = "0.9";
+
+                setTimeout(() => {
+                    bubbleCard.classList.remove('shake');
+                }, 500);
+
+                setTimeout(() => {
+                    errorMessage.classList.remove('opacity-100');
+                    errorMessage.classList.add('opacity-0');
+                    eyesContainer.style.filter = "blur(8px)";
+                    eyesContainer.style.opacity = "0.65";
+                }, 3000);
+
+                input.value = "";
+            }
+        }
+
+        // Foco automático en el input
+        window.addEventListener('load', () => {
+            input.focus();
+        });
+    </script>
+</body>
+</html>
